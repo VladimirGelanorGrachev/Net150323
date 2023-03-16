@@ -1,4 +1,4 @@
-g# MegaGame
+**MegaGame**
 
 English
 
