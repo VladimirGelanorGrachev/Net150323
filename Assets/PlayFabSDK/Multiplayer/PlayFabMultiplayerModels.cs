@@ -648,6 +648,10 @@ namespace PlayFab.MultiplayerModels
         /// The VM size to create the build on.
         /// </summary>
         public AzureVmSize? VmSize;
+        /// <summary>
+        /// The configuration for the VmStartupScript for the build
+        /// </summary>
+        public VmStartupScriptParams VmStartupScriptConfiguration;
     }
 
     [Serializable]
@@ -735,6 +739,10 @@ namespace PlayFab.MultiplayerModels
         /// The VM size the build was created on.
         /// </summary>
         public AzureVmSize? VmSize;
+        /// <summary>
+        /// The configuration for the VmStartupScript feature for the build
+        /// </summary>
+        public VmStartupScriptConfiguration VmStartupScriptConfiguration;
     }
 
     /// <summary>
@@ -815,6 +823,10 @@ namespace PlayFab.MultiplayerModels
         /// The VM size to create the build on.
         /// </summary>
         public AzureVmSize? VmSize;
+        /// <summary>
+        /// The configuration for the VmStartupScript for the build
+        /// </summary>
+        public VmStartupScriptParams VmStartupScriptConfiguration;
         /// <summary>
         /// The crash dump configuration for the build.
         /// </summary>
@@ -907,6 +919,10 @@ namespace PlayFab.MultiplayerModels
         /// The VM size the build was created on.
         /// </summary>
         public AzureVmSize? VmSize;
+        /// <summary>
+        /// The configuration for the VmStartupScript feature for the build
+        /// </summary>
+        public VmStartupScriptConfiguration VmStartupScriptConfiguration;
     }
 
     /// <summary>
@@ -990,6 +1006,10 @@ namespace PlayFab.MultiplayerModels
         /// The VM size to create the build on.
         /// </summary>
         public AzureVmSize? VmSize;
+        /// <summary>
+        /// The configuration for the VmStartupScript for the build
+        /// </summary>
+        public VmStartupScriptParams VmStartupScriptConfiguration;
     }
 
     [Serializable]
@@ -1080,6 +1100,10 @@ namespace PlayFab.MultiplayerModels
         /// The VM size the build was created on.
         /// </summary>
         public AzureVmSize? VmSize;
+        /// <summary>
+        /// The configuration for the VmStartupScript feature for the build
+        /// </summary>
+        public VmStartupScriptConfiguration VmStartupScriptConfiguration;
     }
 
     /// <summary>
@@ -1708,6 +1732,16 @@ namespace PlayFab.MultiplayerModels
         public string Type;
     }
 
+    public enum ExternalFriendSources
+    {
+        None,
+        Steam,
+        Facebook,
+        Xbox,
+        Psn,
+        All
+    }
+
     /// <summary>
     /// Request to find friends lobbies. Only a client can find friend lobbies.
     /// </summary>
@@ -1721,11 +1755,17 @@ namespace PlayFab.MultiplayerModels
         /// <summary>
         /// Controls whether this query should link to friends made on the Facebook network. Defaults to false
         /// </summary>
-        public bool ExcludeFacebookFriends;
+        [Obsolete("Use 'ExternalPlatformFriends' instead", true)]
+        public bool? ExcludeFacebookFriends;
         /// <summary>
         /// Controls whether this query should link to friends made on the Steam network. Defaults to false
         /// </summary>
-        public bool ExcludeSteamFriends;
+        [Obsolete("Use 'ExternalPlatformFriends' instead", true)]
+        public bool? ExcludeSteamFriends;
+        /// <summary>
+        /// Indicates which other platforms' friends this query should link to.
+        /// </summary>
+        public ExternalFriendSources? ExternalPlatformFriends;
         /// <summary>
         /// OData style string that contains one or more filters. Only the following operators are supported: "and" (logical and),
         /// "eq" (equal), "ne" (not equals), "ge" (greater than or equal), "gt" (greater than), "le" (less than or equal), and "lt"
@@ -4793,6 +4833,24 @@ namespace PlayFab.MultiplayerModels
         /// The virtual machine ID.
         /// </summary>
         public string VmId;
+    }
+
+    [Serializable]
+    public class VmStartupScriptConfiguration : PlayFabBaseModel
+    {
+        /// <summary>
+        /// Asset which contains the VmStartupScript script and any other required files.
+        /// </summary>
+        public AssetReference VmStartupScriptAssetReference;
+    }
+
+    [Serializable]
+    public class VmStartupScriptParams : PlayFabBaseModel
+    {
+        /// <summary>
+        /// Asset which contains the VmStartupScript script and any other required files.
+        /// </summary>
+        public AssetReferenceParams VmStartupScriptAssetReference;
     }
 
     [Serializable]
