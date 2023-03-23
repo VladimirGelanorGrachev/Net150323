@@ -10,7 +10,7 @@ public class UICreateAccount : MonoBehaviour
     [SerializeField] Text errorText;
     [SerializeField] Canvas canvas;
 
-    string username, password, emailAddress;
+    private string _username, _password, _emailAddress;
 
     void OnEnable()
     {
@@ -35,23 +35,23 @@ public class UICreateAccount : MonoBehaviour
         errorText.text = error;
     }
 
-    public void UpdateUsername(string _username)
+    public void UpdateUsername(string username)
     {
-        username = _username;
+        _username = username;
     }
 
-    public void UpdatePassword(string _password) 
+    public void UpdatePassword(string password) 
     {
-        password = _password;
+        _password = password;
     }
 
-    public void UpdtateEmailAddress(string _emailAddress)
+    public void UpdtateEmailAddress(string emailAddress)
     {
-        emailAddress = _emailAddress;
+        _emailAddress = emailAddress;
     }
 
     public void CreateAccount()
     {
-        UserAccountManager.Instance.CreationAccount(username, emailAddress, password);
+        UserAccountManager.Instance.CreationAccount(_username, _emailAddress, _password);
     }
 }

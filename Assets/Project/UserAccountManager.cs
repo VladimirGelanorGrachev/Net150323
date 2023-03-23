@@ -16,6 +16,7 @@ public class UserAccountManager : MonoBehaviour
     {
         Instance = this;
     }
+
     public void CreationAccount (string username, string emailAddress, string password)
     {
         PlayFabClientAPI.RegisterPlayFabUser(
@@ -49,11 +50,11 @@ public class UserAccountManager : MonoBehaviour
             Password = password
         },
         response => { 
-            Debug.Log($"Successful Account Creation: {username}");
+            Debug.Log($"Successful Account SingIn: {username}");
             OnSinInSuccess.Invoke();
         },
         error => { 
-            Debug.Log($"Unsuccessful Account Creation: {username} \n {error.ErrorMessage}");
+            Debug.Log($"Unsuccessful Account SingIn: {username} \n {error.ErrorMessage}");
             OnSinInFailed.Invoke(error.ErrorMessage);
         }
         );
