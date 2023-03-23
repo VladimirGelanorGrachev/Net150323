@@ -2,6 +2,7 @@ using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 
 public class UserAccountManager : MonoBehaviour
@@ -11,6 +12,9 @@ public class UserAccountManager : MonoBehaviour
     public static UnityEvent OnSinInSuccess = new UnityEvent();
     public static UnityEvent<string> OnSinInFailed = new UnityEvent<string>();
     public static UnityEvent<string> OnCreateAccountFailed = new UnityEvent<string>();
+    public static UnityEvent<string, string> OnUserDataRetrived = new UnityEvent<string, string> { };
+
+    string plafabId;
 
 
     void Awake()
@@ -33,6 +37,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Successful Account Creation: {username}, {emailAddress}");
                 SingIn(username, password);
+
             },
             error => 
             {
@@ -53,6 +58,7 @@ public class UserAccountManager : MonoBehaviour
         response => { 
             Debug.Log($"Successful Account SingIn: {username}");
             OnSinInSuccess.Invoke();
+            plafabId = response.PlayFabId;
         },
         error => { 
             Debug.Log($"Unsuccessful Account SingIn: {username} \n {error.ErrorMessage}");
@@ -104,6 +110,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success logging in with Android Device ID");
                 OnSinInSuccess.Invoke();
+                plafabId = response.PlayFabId;
             }, 
             error => 
             {
@@ -127,6 +134,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success logging in with iOS Device ID");
                 OnSinInSuccess.Invoke();
+                plafabId = response.PlayFabId;
             },
             error =>
             {
@@ -148,6 +156,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success logging in with Custom ID");
                 OnSinInSuccess.Invoke();
+                plafabId = response.PlayFabId;
             },
             error =>
             {
@@ -156,5 +165,49 @@ public class UserAccountManager : MonoBehaviour
             }
             );
         }
+    }
+
+    public void GetUserData(string key)
+    {
+        PlayFabClientAPI.GetUserData(new GetUserDataRequest()
+        {
+            PlayFabId = plafabId,
+            Keys = new List<string>() 
+            {
+                key
+            }
+        },
+        response =>
+        {
+            Debug.Log("Seccessful GetUserData");
+            if (response.Data.ContainsKey(key)) OnUserDataRetrived.Invoke(key, response.Data[key].Value);
+            else OnUserDataRetrived.Invoke(key, null);
+        },
+        error =>
+        {
+            Debug.Log($"Unseccessful GetUserData: {error.ErrorMessage}");
+        }
+        );
+    }
+
+    public void SetUserData(string key, string value, UnityAction OnSuccess = null)
+    {
+        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest()
+        {
+            Data = new Dictionary<string, string>()
+            {
+                { key, value}
+            }
+        },
+        response =>
+        {
+            Debug.Log("Seccessful SetUserData");
+            OnSuccess.Invoke();
+        },
+        error =>
+        {
+            Debug.Log($"Unseccessful SetUserData: {error.ErrorMessage}");
+        }
+        );
     }
 }
