@@ -12,9 +12,11 @@ public class UserAccountManager : MonoBehaviour
     public static UnityEvent OnSinInSuccess = new UnityEvent();
     public static UnityEvent<string> OnSinInFailed = new UnityEvent<string>();
     public static UnityEvent<string> OnCreateAccountFailed = new UnityEvent<string>();
-    public static UnityEvent<string, string> OnUserDataRetrived = new UnityEvent<string, string> { };
+    public static UnityEvent<string, string> OnUserDataRetrieved = new UnityEvent<string, string> { };
+    public static UnityEvent<string, int> OnStatisticRetrieved = new UnityEvent<string, int> { };
+    public static UnityEvent<string, List<PlayerLeaderboardEntry>> OnLeaderboardRetrieved = new UnityEvent<string, List<PlayerLeaderboardEntry>> { };
 
-    string plafabId;
+    string playfabId;
 
 
     void Awake()
@@ -58,7 +60,7 @@ public class UserAccountManager : MonoBehaviour
         response => { 
             Debug.Log($"Successful Account SingIn: {username}");
             OnSinInSuccess.Invoke();
-            plafabId = response.PlayFabId;
+            playfabId = response.PlayFabId;
         },
         error => { 
             Debug.Log($"Unsuccessful Account SingIn: {username} \n {error.ErrorMessage}");
@@ -110,7 +112,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success logging in with Android Device ID");
                 OnSinInSuccess.Invoke();
-                plafabId = response.PlayFabId;
+                playfabId = response.PlayFabId;
             }, 
             error => 
             {
@@ -134,7 +136,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success logging in with iOS Device ID");
                 OnSinInSuccess.Invoke();
-                plafabId = response.PlayFabId;
+                playfabId = response.PlayFabId;
             },
             error =>
             {
@@ -156,7 +158,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Success logging in with Custom ID");
                 OnSinInSuccess.Invoke();
-                plafabId = response.PlayFabId;
+                playfabId = response.PlayFabId;
             },
             error =>
             {
@@ -171,7 +173,7 @@ public class UserAccountManager : MonoBehaviour
     {
         PlayFabClientAPI.GetUserData(new GetUserDataRequest()
         {
-            PlayFabId = plafabId,
+            PlayFabId = playfabId,
             Keys = new List<string>() 
             {
                 key
@@ -180,8 +182,8 @@ public class UserAccountManager : MonoBehaviour
         response =>
         {
             Debug.Log("Seccessful GetUserData");
-            if (response.Data.ContainsKey(key)) OnUserDataRetrived.Invoke(key, response.Data[key].Value);
-            else OnUserDataRetrived.Invoke(key, null);
+            if (response.Data.ContainsKey(key)) OnUserDataRetrieved.Invoke(key, response.Data[key].Value);
+            else OnUserDataRetrieved.Invoke(key, null);
         },
         error =>
         {
@@ -207,6 +209,87 @@ public class UserAccountManager : MonoBehaviour
         error =>
         {
             Debug.Log($"Unseccessful SetUserData: {error.ErrorMessage}");
+        }
+        );
+    }
+
+    public void GetStatistic (string key) 
+    {
+        PlayFabClientAPI.GetPlayerStatistics(new GetPlayerStatisticsRequest()
+        {
+            StatisticNames = new List<string> {key}
+        },
+        response =>
+        {
+            Debug.Log($"Successful GetStatistic");
+           if(response.Statistics != null && response.Statistics.Count >0) 
+                OnStatisticRetrieved.Invoke(key, response.Statistics[0].Value);
+        },
+        error =>
+        {
+            Debug.Log($"Unsuccessful GetStatistic: {error.ErrorMessage}");
+        }
+        );
+    
+    }
+
+    public void SetStatistic (string key, int value)
+    {
+        PlayFabClientAPI.UpdatePlayerStatistics(new UpdatePlayerStatisticsRequest()
+        {
+            Statistics = new List<StatisticUpdate>() 
+            {
+                new StatisticUpdate()
+                {
+                StatisticName = key,
+                Value = value
+                }
+            }
+        },
+         response =>
+         {
+             Debug.Log($"Successful SetStatistic");             
+         },
+        error =>
+        {
+            Debug.Log($"Unsuccessful SetStatistic: {error.ErrorMessage}");
+        }
+        );
+    }
+
+    public void GetLeaderboard (string key) 
+    {
+        PlayFabClientAPI.GetLeaderboard(new GetLeaderboardRequest()
+        {
+            StatisticName= key,
+            MaxResultsCount= 5
+        },
+         response =>
+         {
+             Debug.Log($"Successful Getleaderboard");
+            if(response.Leaderboard != null)
+                 OnLeaderboardRetrieved.Invoke(key,response.Leaderboard);
+         },
+        error =>
+        {
+            Debug.Log($"Unsuccessful GetLeaderboard: {error.ErrorMessage}");
+        }
+        );
+    }
+
+    public void SetDisplayName(string displayName) 
+    {
+        PlayFabClientAPI.UpdateUserTitleDisplayName(new UpdateUserTitleDisplayNameRequest() 
+        { 
+
+        },
+        response => 
+        {
+            Debug.Log($"Successful SetDisplayName");
+        }, 
+        error => 
+        {
+            Debug.Log($"Unsuccessful SetDisplayName: {error.ErrorMessage}");
         }
         );
     }

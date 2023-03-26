@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using PlayFab.ClientModels;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIProfile : MonoBehaviour
@@ -41,6 +43,6 @@ public class UIProfile : MonoBehaviour
         playerNameText.text = profileData._playerName;
         playerLevelText.text = level.ToString();
         playerXPtext.text = (xp * UserProfile.instance._xpThreshold).ToString();
-        //playerXPFill.fillAmount = xp;
+        //playerXPFill.fillAmount = ((float)profileData.xp) / (UserProfile.Instance.levelCap);
     }
 }
