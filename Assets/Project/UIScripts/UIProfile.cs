@@ -27,7 +27,7 @@ public class UIProfile : MonoBehaviour
 
     void SingIn()
     {
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
         canvasGroup.alpha = 1;
     }
 
@@ -38,7 +38,7 @@ public class UIProfile : MonoBehaviour
         float level = (Mathf.Floor(profileData._level));
         float xp = profileData._level - level;
 
-        playerLevelText.text = profileData._playerName;
+        playerNameText.text = profileData._playerName;
         playerLevelText.text = level.ToString();
         playerXPtext.text = (xp * UserProfile.instance._xpThreshold).ToString();
         //playerXPFill.fillAmount = xp;

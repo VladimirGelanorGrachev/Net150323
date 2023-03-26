@@ -62,6 +62,12 @@ public class UserProfile : MonoBehaviour
         _profileData._level += UnityEngine.Random.Range(0f, 1f);
         SetUserData(GetUserData);
     }
+
+    public void SetPlayerName(string playerName)
+    {
+        _profileData._playerName = playerName;
+        SetUserData(GetUserData);
+    }
     
 
 }

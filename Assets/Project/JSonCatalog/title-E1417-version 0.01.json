@@ -1,0 +1,179 @@
+{
+  "CatalogVersion": "version 0.01",
+  "Catalog": [
+    {
+      "ItemId": "lemon",
+      "ItemClass": null,
+      "CatalogVersion": "version 0.01",
+      "DisplayName": "Fruit lemon",
+      "Description": "Lemon. Oops",
+      "VirtualCurrencyPrices": {
+        "SR": 5
+      },
+      "RealCurrencyPrices": {},
+      "Tags": [
+        "fruit"
+      ],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": true,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "NewBundles",
+      "ItemClass": null,
+      "CatalogVersion": "version 0.01",
+      "DisplayName": "Bundles 0.1",
+      "Description": null,
+      "VirtualCurrencyPrices": {
+        "GD": 500
+      },
+      "RealCurrencyPrices": {},
+      "Tags": [],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": {
+        "BundledItems": [
+          "lemon",
+          "shield_level_5",
+          "sword_level_5",
+          "chest_level_5"
+        ],
+        "BundledResultTables": [],
+        "BundledVirtualCurrencies": null
+      },
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "shield_level_5",
+      "ItemClass": null,
+      "CatalogVersion": "version 0.01",
+      "DisplayName": "Level 5 Shield",
+      "Description": "It’s my first catalog item ever. \nLol =)",
+      "VirtualCurrencyPrices": {
+        "GD": 100
+      },
+      "RealCurrencyPrices": {},
+      "Tags": ["shield, armor"],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "sword_level_5",
+      "ItemClass": null,
+      "CatalogVersion": "version 0.01",
+      "DisplayName": "Level 5 Sword",
+      "Description": "It’s my second catalog item ever. \nLol =)",
+      "VirtualCurrencyPrices": {
+        "GD": 125
+      },
+      "RealCurrencyPrices": {},
+      "Tags": ["weapon"],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "chest_level_5",
+      "ItemClass": null,
+      "CatalogVersion": "version 0.01",
+      "DisplayName": "Level 5 Chest",
+      "Description": "It’s chest. \nLol =)",
+      "VirtualCurrencyPrices": {
+        "GD": 110
+      },
+      "RealCurrencyPrices": {},
+      "Tags": ["chest, armor"],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "trash",
+      "ItemClass": null,
+      "CatalogVersion": "version 0.01",
+      "DisplayName": "trash",
+      "Description": "it's a trash",
+      "VirtualCurrencyPrices": {
+        "SR": 1
+      },
+      "RealCurrencyPrices": {},
+      "Tags": ["trash"],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": true,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    }
+  ],
+  "DropTables": []
+}
