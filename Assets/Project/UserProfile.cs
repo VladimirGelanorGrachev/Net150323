@@ -18,8 +18,7 @@ public class UserProfile : MonoBehaviour
     public int highscore = 0;
 
     [Header("Settings")]
-    public float levelCap = 1000;
-    public float _xpThreshold = 1000;
+    public float levelCap = 1000;    
 
     void Awake()
     {
