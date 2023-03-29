@@ -42,7 +42,7 @@ public class UIProfile : MonoBehaviour
 
         playerNameText.text = profileData._playerName;
         playerLevelText.text = level.ToString();
-        playerXPtext.text = (xp * UserProfile.instance._xpThreshold).ToString();
+        playerXPtext.text = (xp * UserProfile.instance.levelCap).ToString();
         //playerXPFill.fillAmount = ((float)profileData.xp) / (UserProfile.Instance.levelCap);
     }
 }
