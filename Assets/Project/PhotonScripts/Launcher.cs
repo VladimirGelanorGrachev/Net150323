@@ -3,8 +3,7 @@ using UnityEngine;
 using Photon.Realtime;
 
 public class Launcher : MonoBehaviourPunCallbacks
-{
-    string gameVersion = "1";
+{   
 
     void Awake()
     {
@@ -18,19 +17,23 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void Connect()
     {
-        if (PhotonNetwork.IsConnected) 
-        {
-            PhotonNetwork.JoinRandomRoom();
-        }
-        else
-        {
+        if (PhotonNetwork.IsConnected)
+            return;
+
+       
             PhotonNetwork.ConnectUsingSettings();
-            PhotonNetwork.GameVersion = gameVersion;
-        }
+            PhotonNetwork.GameVersion = Application.version;
+        
     }
 
     public override void OnConnectedToMaster()
     {
         Debug.Log("OnConnectedToMaster() was called by PUN");
+        PhotonNetwork.CreateRoom("NewName");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("OnJoinedRoom");
     }
 }
