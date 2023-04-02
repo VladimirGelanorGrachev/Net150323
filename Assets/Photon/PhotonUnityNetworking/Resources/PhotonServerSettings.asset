@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: dev
     UseNameServer: 1
-    FixedRegion: ru
+    FixedRegion: 
     Server: 
     Port: 0
     ProxyServer: 
