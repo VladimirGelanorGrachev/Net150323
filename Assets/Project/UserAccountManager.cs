@@ -4,7 +4,8 @@ using PlayFab.ClientModels;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Collections;
-
+using TMPro;
+using UnityEngine.UI;
 
 public class UserAccountManager : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class UserAccountManager : MonoBehaviour
 
     public static string playfabID;
     public static UserAccountInfo userAccountInfo;
+
+
 
 
     void Awake()
