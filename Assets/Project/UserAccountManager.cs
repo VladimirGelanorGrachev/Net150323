@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
+using UnityEditor.PackageManager;
+using System.Linq;
 
 public class UserAccountManager : MonoBehaviour
 {
@@ -21,8 +23,17 @@ public class UserAccountManager : MonoBehaviour
     public static string playfabID;
     public static UserAccountInfo userAccountInfo;
 
+    [SerializeField] TMP_Text _titleLable;
 
+    [SerializeField] private GameObject _newCharacterCreatePanel;
 
+    [SerializeField] private Button _createCharecterButton;
+
+    [SerializeField] private TMP_InputField _InputField;
+
+    [SerializeField] private List<SlotCharacterWidget> _slots;
+
+    private string _characterName;
 
     void Awake()
     {
@@ -44,6 +55,7 @@ public class UserAccountManager : MonoBehaviour
             {
                 Debug.Log($"Successful Account Creation: {username}, {emailAddress}");
                 SingIn(username, password);
+                CreateNewCharacters();
 
             },
             error => 
@@ -65,7 +77,8 @@ public class UserAccountManager : MonoBehaviour
         response => { 
             Debug.Log($"Successful Account SingIn: {username}");
             OnSinInSuccess.Invoke();
-            playfabID = response.PlayFabId;
+            playfabID = response.PlayFabId;            
+            CreateNewCharacters();
         },
         error => { 
             Debug.Log($"Unsuccessful Account SingIn: {username} \n {error.ErrorMessage}");
@@ -118,6 +131,7 @@ public class UserAccountManager : MonoBehaviour
                 Debug.Log($"Success logging in with Android Device ID");
                 OnSinInSuccess.Invoke();
                 playfabID = response.PlayFabId;
+                CreateNewCharacters();
             }, 
             error => 
             {
@@ -142,6 +156,7 @@ public class UserAccountManager : MonoBehaviour
                 Debug.Log($"Success logging in with iOS Device ID");
                 OnSinInSuccess.Invoke();
                 playfabID = response.PlayFabId;
+                CreateNewCharacters();
             },
             error =>
             {
@@ -164,6 +179,7 @@ public class UserAccountManager : MonoBehaviour
                 Debug.Log($"Success logging in with Custom ID");
                 OnSinInSuccess.Invoke();
                 playfabID = response.PlayFabId;
+                CreateNewCharacters();
             },
             error =>
             {
@@ -351,4 +367,121 @@ public class UserAccountManager : MonoBehaviour
     }
 #endregion
 
+
+    public void CreateCharacter ()
+    {
+        PlayFabClientAPI.GrantCharacterToUser(new GrantCharacterToUserRequest
+        {
+            CharacterName = _characterName,
+            ItemId = "character_token"
+        },
+        result =>
+        {
+            UpdateCharrecterStatistics(result.CharacterId);
+        },
+        error =>
+        {
+            Debug.Log("Sorry, it's error");
+        }
+        );
+    }
+
+    private void UpdateCharrecterStatistics(string characterId)
+    {
+        PlayFabClientAPI.UpdateCharacterStatistics(new UpdateCharacterStatisticsRequest
+        {
+            CharacterId = characterId,
+            CharacterStatistics = new Dictionary<string, int>
+            {
+                {"Level", 1 },
+                {"Gold", 1000 }
+            }
+        },
+        result =>
+        {
+            Debug.Log("Complete!");
+            CloseCreateNewCharracter();
+            GetCharacters();
+        },
+        error =>
+        {
+            Debug.Log("Sorry, it's error");
+        }
+        );
+    }
+
+    private void OnNameChanged(string changedName)
+    {
+        _characterName = changedName;
+    }
+
+    private void OpenCreateNewCharracter()
+    {
+        _newCharacterCreatePanel.SetActive(true);
+    }
+
+    private void CloseCreateNewCharracter()
+    {
+        _newCharacterCreatePanel.SetActive(false);
+    }
+
+    private void GetCharacters()
+    {
+        PlayFabClientAPI.GetAllUsersCharacters(new ListUsersCharactersRequest
+        {
+
+        },
+        result =>
+        {
+           Debug.Log($"Character count: {result.Characters.Count}");           
+           ShowCharactersSlot(result.Characters);
+        },
+        error => 
+        {
+            Debug.Log("Sorry, it's error");
+        }
+        );
+    }
+
+    private void ShowCharactersSlot(List<CharacterResult> characters)
+    {
+        if (characters.Count == 0)
+        {
+
+            foreach (var slot in _slots)
+                slot.ShowEmptySlot();
+        }
+        else if (characters.Count > 0 && characters.Count < _slots.Count)
+        {
+            PlayFabClientAPI.GetCharacterStatistics(new GetCharacterStatisticsRequest
+            {
+                CharacterId = characters.First().CharacterId
+            },
+            result =>
+            {
+                var level = result.CharacterStatistics["Level"].ToString();
+                var gold = result.CharacterStatistics["Gold"].ToString();
+
+                _slots.First().ShowInfoCracterSlot(characters.First().CharacterName, level, gold);
+            },
+            error => { }
+            );
+        }
+        else
+        {
+            Debug.Log("Add slots for characters");
+        }
+
+    }
+
+    public void CreateNewCharacters()
+    {     
+        GetCharacters();
+
+        foreach (var slot in _slots)
+            slot.SlotButton.onClick.AddListener(OpenCreateNewCharracter);
+
+        _InputField.onValueChanged.AddListener(OnNameChanged);
+        _createCharecterButton.onClick.AddListener(CreateCharacter);
+    }
 }

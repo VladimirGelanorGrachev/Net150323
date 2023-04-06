@@ -168,5 +168,4 @@ public class CurrencyData
     public int Diamonds;
     public int Gold;
     public int Silver;
-
 }

@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class SlotCharacterWidget : MonoBehaviour
 {
+    [Header("Canvas")]
+    [SerializeField] CanvasGroup _canvasGroup;
+
+    [Header("Main Settings")]
     [SerializeField] private Button _button;
     [SerializeField] private GameObject _emptySlot;
     [SerializeField] private GameObject _infoCharacterSlot;

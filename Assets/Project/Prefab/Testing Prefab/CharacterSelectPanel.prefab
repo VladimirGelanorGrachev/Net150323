@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 211075072693424245}
   - component: {fileID: 4099473071095101745}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MainText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -872,6 +872,7 @@ GameObject:
   - component: {fileID: 6060065992567965234}
   - component: {fileID: 6060065992567965233}
   - component: {fileID: 6060065992567965232}
+  - component: {fileID: 734569546798868413}
   m_Layer: 5
   m_Name: CharacterSelectPanel
   m_TagString: Untagged
@@ -962,6 +963,24 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &734569546798868413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6060065992567965239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5191891840034ba42aaa0a3ef4522155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 7718153872357478921}
+  _emptySlot: {fileID: 5059958496880188994}
+  _infoCharacterSlot: {fileID: 5913848265466372439}
+  _nameLable: {fileID: 3262862337494861021}
+  _levelLable: {fileID: 4491099329361243824}
+  _goldLable: {fileID: 1313363316033100188}
 --- !u!1 &6060065992935559374
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,29 +1570,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &7245423680138013551 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6934186488478280385, guid: eca9c9ac21458ad40af0f118fc04215b, type: 3}
-  m_PrefabInstance: {fileID: 339959845582782894}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5027613210698566603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7245423680138013551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5191891840034ba42aaa0a3ef4522155, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _button: {fileID: 7718153872357478921}
-  _emptySlot: {fileID: 5059958496880188994}
-  _infoCharacterSlot: {fileID: 5913848265466372439}
-  _nameLable: {fileID: 3262862337494861021}
-  _levelLable: {fileID: 4491099329361243824}
-  _goldLable: {fileID: 1313363316033100188}
 --- !u!114 &7718153872357478921 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8046705067932750759, guid: eca9c9ac21458ad40af0f118fc04215b, type: 3}
