@@ -11,12 +11,12 @@ public class UILeaderboardLevel : MonoBehaviour
 
     void OnEnable()
     {
-        UserProfile.OnLeaderboardLevelUpdate.AddListener(UILeaderboardLevelUpdated);
+        UserProfile.OnLeaderboardHighscoreUpdated.AddListener(UILeaderboardLevelUpdated);
     }
 
     void OnDisable()
     {
-        UserProfile.OnLeaderboardLevelUpdate.RemoveListener(UILeaderboardLevelUpdated);
+        UserProfile.OnLeaderboardHighscoreUpdated.RemoveListener(UILeaderboardLevelUpdated);
     }
 
     void UILeaderboardLevelUpdated (List<PlayerLeaderboardEntry> leaderboardEntries)

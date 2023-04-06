@@ -3,18 +3,21 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class UserProfile : MonoBehaviour
 {
-    public static UserProfile instance;
+    public static UserProfile Instance;
 
-    public static UnityEvent<ProfileData> OnProfileData = new UnityEvent<ProfileData>();
-    public static UnityEvent<List<PlayerLeaderboardEntry>> OnLeaderboardLevelUpdate = new UnityEvent<List<PlayerLeaderboardEntry>>();
+    public static UnityEvent<ProfileData> OnProfileDataUpdated = new UnityEvent<ProfileData>();
+    public static UnityEvent<CurrencyData> OnCurrencyDataUpdated = new UnityEvent<CurrencyData>();
+    public static UnityEvent<List<PlayerLeaderboardEntry>> OnLeaderboardHighscoreUpdated = new UnityEvent<List<PlayerLeaderboardEntry>>();
 
     [Header("Data")]
     [SerializeField] ProfileData _profileData;
     [SerializeField] List<PlayerLeaderboardEntry> leaderboardHighscore = new List<PlayerLeaderboardEntry>();
+    [SerializeField] CurrencyData _currencyData;
     public int highscore = 0;
 
     [Header("Settings")]
@@ -22,7 +25,7 @@ public class UserProfile : MonoBehaviour
 
     void Awake()
     {
-        instance = this; 
+        Instance = this; 
     }
 
 
@@ -47,7 +50,7 @@ public class UserProfile : MonoBehaviour
     {
         GetUserData();
         GetHighscoreStatistic();
-        GetLeaderboardLevel();
+        GetLeaderboardHighscore();
     }
 
     void UserDataRetrieved(string key, string value)
@@ -62,9 +65,9 @@ public class UserProfile : MonoBehaviour
             {
                 _profileData = new ProfileData();
             }
-            //_profileData._playerName = UserAccountManager.userAccountInfo.TitleInfo.DisplayName;
+            _profileData._playerName = UserAccountManager.userAccountInfo.TitleInfo.DisplayName;
 
-            //OnProfileDataUpdated.Invoke(_profileData);
+            OnProfileDataUpdated.Invoke(_profileData);
         }
     }
 
@@ -78,7 +81,7 @@ public class UserProfile : MonoBehaviour
     void SetUserData(UnityAction OnSuccess = null)
     {
         UserAccountManager.Instance.SetUserData("ProfileData", JsonUtility.ToJson(_profileData));
-        //OnProfileDataUpdated.Invoke(_profileData);
+        OnProfileDataUpdated.Invoke(_profileData);
     }
 
     void GetHighscoreStatistic()
@@ -99,7 +102,7 @@ public class UserProfile : MonoBehaviour
         if (key == "ProfileData")
         {
             _profileData = JsonUtility.FromJson<ProfileData>(value);
-            OnProfileData.Invoke(_profileData);
+            OnProfileDataUpdated.Invoke(_profileData);
         }
     }
 
@@ -113,27 +116,39 @@ public class UserProfile : MonoBehaviour
     public void SetPlayerName(string playerName)
     {
         _profileData._playerName = playerName;
-        SetUserData(GetUserData);
-        UserAccountManager.Instance.SetDisplayName(playerName);
+        
     }
 
-    public void AddXp() 
+    [ContextMenu("Add Random XP")]
+    public void AddRandomXp() 
     {
         _profileData._level += UnityEngine.Random.Range(0f, 1f);
-        SetUserData(GetUserData);
-        UserAccountManager.Instance.SetStatistic("Level",(int)(Mathf.FloorToInt(_profileData._level)));
-    }
-    
-    void GetLeaderboardLevel()
-    {
-        UserAccountManager.Instance.GetLeaderboard("Level");
+        _profileData._xp = (int)((_profileData._level - (MathF.Floor(_profileData._level))) * levelCap);
+
+        SetUserData();
     }
 
-    void LeaderboardRetrieved(string key, List<PlayerLeaderboardEntry> leaderboardEntries)
+
+    [ContextMenu("Get Highscore Leaderboard")]
+    void GetLeaderboardHighscore()
     {
-        if (key == "Level")
+        UserAccountManager.Instance.GetLeaderboard("Highscore");
+    }
+
+
+    [ContextMenu("Increase Highscore")]
+    void IncreaseHighscore()
+    {
+        highscore += 1;
+        UserAccountManager.Instance.SetStatistic("Highscore", highscore);
+    }
+
+    void LeaderboardRetrieved(string statistic, List<PlayerLeaderboardEntry> leaderboard)
+    {
+        if (statistic == "Highscore")
         {
-            OnLeaderboardLevelUpdate.Invoke(leaderboardEntries);
+            leaderboardHighscore = leaderboard;
+            OnLeaderboardHighscoreUpdated.Invoke(leaderboard);
         };
     }
 
@@ -145,4 +160,13 @@ public class ProfileData
     public string _playerName;
     public float _level;
     public int _xp;
+    public int _health;
+}
+
+public class CurrencyData
+{
+    public int Diamonds;
+    public int Gold;
+    public int Silver;
+
 }
