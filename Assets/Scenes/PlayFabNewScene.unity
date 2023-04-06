@@ -545,7 +545,6 @@ MonoBehaviour:
     StatValue: 0
   highscore: 4
   levelCap: 1000
-  _xpThreshold: 1000
 --- !u!114 &457276184
 MonoBehaviour:
   m_ObjectHideFlags: 0
