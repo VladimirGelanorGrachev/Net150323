@@ -11,11 +11,15 @@ namespace PlayFab.EconomyModels
         /// <summary>
         /// The amount to add to the current item amount.
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// The inventory item the operation applies to.
         /// </summary>
         public InventoryItemReference Item;
+        /// <summary>
+        /// The values to apply to a stack newly created by this operation.
+        /// </summary>
+        public InitialValues NewStackValues;
     }
 
     /// <summary>
@@ -27,7 +31,7 @@ namespace PlayFab.EconomyModels
         /// <summary>
         /// The amount to add for the current item.
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// The id of the entity's collection to perform this action on. (Default="default")
         /// </summary>
@@ -37,9 +41,17 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public Dictionary<string,string> CustomTags;
         /// <summary>
+        /// The duration to add to the current item expiration date.
+        /// </summary>
+        public double? DurationInSeconds;
+        /// <summary>
         /// The entity to perform this action on.
         /// </summary>
         public EntityKey Entity;
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The Idempotency ID for this request.
         /// </summary>
@@ -48,11 +60,19 @@ namespace PlayFab.EconomyModels
         /// The inventory item the request applies to.
         /// </summary>
         public InventoryItemReference Item;
+        /// <summary>
+        /// The values to apply to a stack newly created by this request.
+        /// </summary>
+        public InitialValues NewStackValues;
     }
 
     [Serializable]
     public class AddInventoryItemsResponse : PlayFabResultCommon
     {
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The idempotency id used in the request.
         /// </summary>
@@ -162,6 +182,12 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public List<DeepLink> DeepLinks;
         /// <summary>
+        /// The Stack Id that will be used as default for this item in Inventory when an explicit one is not provided. This
+        /// DefaultStackId can be a static stack id or '{guid}', which will generate a unique stack id for the item. If null,
+        /// Inventory's default stack id will be used.
+        /// </summary>
+        public string DefaultStackId;
+        /// <summary>
         /// A dictionary of localized descriptions. Key is language code and localized string is the value. The neutral locale is
         /// required.
         /// </summary>
@@ -269,6 +295,10 @@ namespace PlayFab.EconomyModels
         /// The amounts of the catalog item price.
         /// </summary>
         public List<CatalogPriceAmount> Amounts;
+        /// <summary>
+        /// The per-unit duration this price can be used to purchase.
+        /// </summary>
+        public double? UnitDurationInSeconds;
     }
 
     [Serializable]
@@ -761,6 +791,10 @@ namespace PlayFab.EconomyModels
         /// The entity the request is about. Set to the caller by default.
         /// </summary>
         public EntityKey Entity;
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
     }
 
     [Serializable]
@@ -796,6 +830,10 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public EntityKey Entity;
         /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
+        /// <summary>
         /// The Idempotency ID for this request.
         /// </summary>
         public string IdempotencyId;
@@ -808,6 +846,10 @@ namespace PlayFab.EconomyModels
     [Serializable]
     public class DeleteInventoryItemsResponse : PlayFabResultCommon
     {
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The idempotency id used in the request.
         /// </summary>
@@ -901,6 +943,10 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public EntityKey Entity;
         /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
+        /// <summary>
         /// The Idempotency ID for this request.
         /// </summary>
         public string IdempotencyId;
@@ -914,6 +960,10 @@ namespace PlayFab.EconomyModels
     [Serializable]
     public class ExecuteInventoryOperationsResponse : PlayFabResultCommon
     {
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The idempotency id used in the request.
         /// </summary>
@@ -1178,6 +1228,10 @@ namespace PlayFab.EconomyModels
         /// An opaque token used to retrieve the next page of items, if any are available.
         /// </summary>
         public string ContinuationToken;
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The requested inventory items.
         /// </summary>
@@ -1459,6 +1513,51 @@ namespace PlayFab.EconomyModels
         public DateTime CollectionsAccessTokenExpirationDate;
     }
 
+    /// <summary>
+    /// Get transaction history for specified entity and collection.
+    /// </summary>
+    [Serializable]
+    public class GetTransactionHistoryRequest : PlayFabRequestCommon
+    {
+        /// <summary>
+        /// The id of the entity's collection to perform this action on. (Default="default")
+        /// </summary>
+        public string CollectionId;
+        /// <summary>
+        /// An opaque token used to retrieve the next page of items, if any are available. Should be null on initial request.
+        /// </summary>
+        public string ContinuationToken;
+        /// <summary>
+        /// Number of items to retrieve. (Default = 10)
+        /// </summary>
+        public int Count;
+        /// <summary>
+        /// The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
+        /// </summary>
+        public Dictionary<string,string> CustomTags;
+        /// <summary>
+        /// The entity to perform this action on.
+        /// </summary>
+        public EntityKey Entity;
+        /// <summary>
+        /// An OData filter used to refine the query.
+        /// </summary>
+        public string Filter;
+    }
+
+    [Serializable]
+    public class GetTransactionHistoryResponse : PlayFabResultCommon
+    {
+        /// <summary>
+        /// An opaque token used to retrieve the next page of items, if any are available. Should be null on initial request.
+        /// </summary>
+        public string ContinuationToken;
+        /// <summary>
+        /// The requested inventory transactions.
+        /// </summary>
+        public List<Transaction> Transactions;
+    }
+
     [Serializable]
     public class GooglePlayProductPurchase : PlayFabBaseModel
     {
@@ -1510,12 +1609,30 @@ namespace PlayFab.EconomyModels
     }
 
     [Serializable]
+    public class InitialValues : PlayFabBaseModel
+    {
+        /// <summary>
+        /// Game specific properties for display purposes.
+        /// </summary>
+        public object DisplayProperties;
+    }
+
+    [Serializable]
     public class InventoryItem : PlayFabBaseModel
     {
         /// <summary>
         /// The amount of the item.
         /// </summary>
-        public int Amount;
+        public int? Amount;
+        /// <summary>
+        /// Game specific properties for display purposes. This is an arbitrary JSON blob.
+        /// </summary>
+        public object DisplayProperties;
+        /// <summary>
+        /// Only used for subscriptions. The date of when the item will expire in UTC. If not provided then the product will be
+        /// available indefinitely.
+        /// </summary>
+        public DateTime? ExpirationDate;
         /// <summary>
         /// The id of the item. This should correspond to the item id in the catalog.
         /// </summary>
@@ -1666,16 +1783,24 @@ namespace PlayFab.EconomyModels
         /// <summary>
         /// The amount to purchase.
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// Indicates whether stacks reduced to an amount of 0 during the operation should be deleted from the inventory. (Default =
         /// false)
         /// </summary>
         public bool DeleteEmptyStacks;
         /// <summary>
+        /// The duration to purchase.
+        /// </summary>
+        public double? DurationInSeconds;
+        /// <summary>
         /// The inventory item the operation applies to.
         /// </summary>
         public InventoryItemReference Item;
+        /// <summary>
+        /// The values to apply to a stack newly created by this operation.
+        /// </summary>
+        public InitialValues NewStackValues;
         /// <summary>
         /// The per-item price the item is expected to be purchased at. This must match a value configured in the Catalog or
         /// specified Store.
@@ -1696,7 +1821,7 @@ namespace PlayFab.EconomyModels
         /// <summary>
         /// The amount to purchase.
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// The id of the entity's collection to perform this action on. (Default="default")
         /// </summary>
@@ -1711,9 +1836,17 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public bool DeleteEmptyStacks;
         /// <summary>
+        /// The duration to purchase.
+        /// </summary>
+        public double? DurationInSeconds;
+        /// <summary>
         /// The entity to perform this action on.
         /// </summary>
         public EntityKey Entity;
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The Idempotency ID for this request.
         /// </summary>
@@ -1722,6 +1855,10 @@ namespace PlayFab.EconomyModels
         /// The inventory item the request applies to.
         /// </summary>
         public InventoryItemReference Item;
+        /// <summary>
+        /// The values to apply to a stack newly created by this request.
+        /// </summary>
+        public InitialValues NewStackValues;
         /// <summary>
         /// The per-item price the item is expected to be purchased at. This must match a value configured in the Catalog or
         /// specified Store.
@@ -1736,6 +1873,10 @@ namespace PlayFab.EconomyModels
     [Serializable]
     public class PurchaseInventoryItemsResponse : PlayFabResultCommon
     {
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The idempotency id used in the request.
         /// </summary>
@@ -2437,12 +2578,16 @@ namespace PlayFab.EconomyModels
         /// <summary>
         /// The amount to subtract from the current item amount.
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// Indicates whether stacks reduced to an amount of 0 during the request should be deleted from the inventory. (Default =
         /// false).
         /// </summary>
         public bool DeleteEmptyStacks;
+        /// <summary>
+        /// The duration to subtract from the current item expiration date.
+        /// </summary>
+        public double? DurationInSeconds;
         /// <summary>
         /// The inventory item the operation applies to.
         /// </summary>
@@ -2456,9 +2601,9 @@ namespace PlayFab.EconomyModels
     public class SubtractInventoryItemsRequest : PlayFabRequestCommon
     {
         /// <summary>
-        /// The amount to add for the current item.
+        /// The amount to subtract for the current item.
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// The id of the entity's collection to perform this action on. (Default="default")
         /// </summary>
@@ -2473,9 +2618,17 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public bool DeleteEmptyStacks;
         /// <summary>
+        /// The duration to subtract from the current item expiration date.
+        /// </summary>
+        public double? DurationInSeconds;
+        /// <summary>
         /// The entity to perform this action on.
         /// </summary>
         public EntityKey Entity;
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The Idempotency ID for this request.
         /// </summary>
@@ -2489,6 +2642,10 @@ namespace PlayFab.EconomyModels
     [Serializable]
     public class SubtractInventoryItemsResponse : PlayFabResultCommon
     {
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The idempotency id used in the request.
         /// </summary>
@@ -2522,12 +2679,133 @@ namespace PlayFab.EconomyModels
     }
 
     [Serializable]
+    public class Transaction : PlayFabBaseModel
+    {
+        /// <summary>
+        /// The API call that caused this transaction.
+        /// </summary>
+        public string ApiName;
+        /// <summary>
+        /// The type of item that the the operation occurred on.
+        /// </summary>
+        public string ItemType;
+        /// <summary>
+        /// The operations that occurred.
+        /// </summary>
+        public List<TransactionOperation> Operations;
+        /// <summary>
+        /// The type of operation that was run.
+        /// </summary>
+        public string OperationType;
+        /// <summary>
+        /// Additional details about the transaction. Null if it was not a purchase operation.
+        /// </summary>
+        public TransactionPurchaseDetails PurchaseDetails;
+        /// <summary>
+        /// Additional details about the transaction. Null if it was not a redeem operation.
+        /// </summary>
+        public TransactionRedeemDetails RedeemDetails;
+        /// <summary>
+        /// The time this transaction occurred in UTC.
+        /// </summary>
+        public DateTime Timestamp;
+        /// <summary>
+        /// The id of the transaction. This should be treated like an opaque token.
+        /// </summary>
+        public string TransactionId;
+        /// <summary>
+        /// Additional details about the transaction. Null if it was not a transfer operation.
+        /// </summary>
+        public TransactionTransferDetails TransferDetails;
+    }
+
+    [Serializable]
+    public class TransactionOperation : PlayFabBaseModel
+    {
+        /// <summary>
+        /// The amount of items in this transaction.
+        /// </summary>
+        public int? Amount;
+        /// <summary>
+        /// The duration modified in this transaction.
+        /// </summary>
+        public double? DurationInSeconds;
+        /// <summary>
+        /// The item id of the items in this transaction.
+        /// </summary>
+        public string ItemId;
+        /// <summary>
+        /// The type of item that the operation occurred on.
+        /// </summary>
+        public string ItemType;
+        /// <summary>
+        /// The stack id of the items in this transaction.
+        /// </summary>
+        public string StackId;
+        /// <summary>
+        /// The type of the operation that occurred.
+        /// </summary>
+        public string Type;
+    }
+
+    [Serializable]
+    public class TransactionPurchaseDetails : PlayFabBaseModel
+    {
+        /// <summary>
+        /// The id of the Store the item was purchased from or null.
+        /// </summary>
+        public string StoreId;
+    }
+
+    [Serializable]
+    public class TransactionRedeemDetails : PlayFabBaseModel
+    {
+        /// <summary>
+        /// The marketplace that the offer is being redeemed from.
+        /// </summary>
+        public string Marketplace;
+        /// <summary>
+        /// The transaction Id returned from the marketplace.
+        /// </summary>
+        public string MarketplaceTransactionId;
+        /// <summary>
+        /// The offer Id of the item being redeemed.
+        /// </summary>
+        public string OfferId;
+    }
+
+    [Serializable]
+    public class TransactionTransferDetails : PlayFabBaseModel
+    {
+        /// <summary>
+        /// The collection id the items were transferred from or null if it was the current collection.
+        /// </summary>
+        public string GivingCollectionId;
+        /// <summary>
+        /// The entity the items were transferred from or null if it was the current entity.
+        /// </summary>
+        public EntityKey GivingEntity;
+        /// <summary>
+        /// The collection id the items were transferred to or null if it was the current collection.
+        /// </summary>
+        public string ReceivingCollectionId;
+        /// <summary>
+        /// The entity the items were transferred to or null if it was the current entity.
+        /// </summary>
+        public EntityKey ReceivingEntity;
+        /// <summary>
+        /// The id of the transfer that occurred.
+        /// </summary>
+        public string TransferId;
+    }
+
+    [Serializable]
     public class TransferInventoryItemsOperation : PlayFabBaseModel
     {
         /// <summary>
         /// The amount to transfer.
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// Indicates whether stacks reduced to an amount of 0 during the operation should be deleted from the inventory. (Default =
         /// false)
@@ -2537,6 +2815,10 @@ namespace PlayFab.EconomyModels
         /// The inventory item the operation is transferring from.
         /// </summary>
         public InventoryItemReference GivingItem;
+        /// <summary>
+        /// The values to apply to a stack newly created by this operation.
+        /// </summary>
+        public InitialValues NewStackValues;
         /// <summary>
         /// The inventory item the operation is transferring to.
         /// </summary>
@@ -2552,7 +2834,7 @@ namespace PlayFab.EconomyModels
         /// <summary>
         /// The amount to transfer .
         /// </summary>
-        public int Amount;
+        public int? Amount;
         /// <summary>
         /// The optional custom tags associated with the request (e.g. build number, external trace identifiers, etc.).
         /// </summary>
@@ -2571,6 +2853,10 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public EntityKey GivingEntity;
         /// <summary>
+        /// ETags are used for concurrency checking when updating resources (before transferring from).
+        /// </summary>
+        public string GivingETag;
+        /// <summary>
         /// The inventory item the request is transferring from.
         /// </summary>
         public InventoryItemReference GivingItem;
@@ -2578,6 +2864,10 @@ namespace PlayFab.EconomyModels
         /// The idempotency id for the request.
         /// </summary>
         public string IdempotencyId;
+        /// <summary>
+        /// The values to apply to a stack newly created by this request.
+        /// </summary>
+        public InitialValues NewStackValues;
         /// <summary>
         /// The inventory collection id the request is transferring to. (Default="default")
         /// </summary>
@@ -2595,6 +2885,10 @@ namespace PlayFab.EconomyModels
     [Serializable]
     public class TransferInventoryItemsResponse : PlayFabResultCommon
     {
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources (after transferring from).
+        /// </summary>
+        public string GivingETag;
         /// <summary>
         /// The ids of transactions that occurred as a result of the request's giving action.
         /// </summary>
@@ -2681,6 +2975,10 @@ namespace PlayFab.EconomyModels
         /// </summary>
         public EntityKey Entity;
         /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
+        /// <summary>
         /// The Idempotency ID for this request.
         /// </summary>
         public string IdempotencyId;
@@ -2693,6 +2991,10 @@ namespace PlayFab.EconomyModels
     [Serializable]
     public class UpdateInventoryItemsResponse : PlayFabResultCommon
     {
+        /// <summary>
+        /// ETags are used for concurrency checking when updating resources.
+        /// </summary>
+        public string ETag;
         /// <summary>
         /// The idempotency id used in the request.
         /// </summary>
